@@ -50,7 +50,7 @@ class MastarController extends Controller
             return response()->json([
                 "data" => $checkingData,
                 "status" => false
-            ], 400);
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json($th, 400);
         }
@@ -69,8 +69,8 @@ class MastarController extends Controller
                 return response()->json($valaditor->errors(), 401); //400 envalies responce
             }
             $checkingData = CompanyName::where("company_id", $r->company_id)->where("customer_id", auth()->user()->id)->first();
-            if (!empty($checkingData)) {
-                $checkingData2 = CompanyName::where("company_name", $r->company_name)->where("customer_id", auth()->user()->id)->first();
+            if (empty($checkingData)) {
+                $checkingData2 = CompanyName::where("company_id", $r->company_id)->where("customer_id", auth()->user()->id)->first();
                 if (!empty($checkingData2)) {
                     $data = CompanyName::where("company_id", $r->company_id)->update([
                         "company_name" => $r->company_name,
@@ -168,7 +168,7 @@ class MastarController extends Controller
             return response()->json([
                 "data" => $checkingData,
                 "status" => false
-            ], 400);
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json($th, 400);
         }
@@ -187,8 +187,8 @@ class MastarController extends Controller
                 return response()->json($valaditor->errors(), 401); //400 envalies responce
             }
             $checkingData = Product::where("product_name", $r->product_name)->where("customer_id", auth()->user()->id)->first();
-            if (!empty($checkingData)) {
-                $checkingData2 = Product::where("product_name", $r->product_name)->where("customer_id", auth()->user()->id)->first();
+            if (empty($checkingData)) {
+                $checkingData2 = Product::where("priduct_id", $r->priduct_id)->where("customer_id", auth()->user()->id)->first();
                 if (!empty($checkingData2)) {
                     $data = Product::where("priduct_id", $r->priduct_id)->update([
                         "product_name" => $r->product_name,
