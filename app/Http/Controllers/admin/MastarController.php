@@ -50,7 +50,7 @@ class MastarController extends Controller
             $checkingData = CompanyName::where("customer_id", auth()->user()->id)->get();
             return response()->json([
                 "data" => $checkingData,
-                "status" => false
+                "status" => true
             ], 200);
         } catch (\Throwable $th) {
             return response()->json($th, 400);
@@ -67,10 +67,10 @@ class MastarController extends Controller
             ];
             $valaditor = Validator::make($r->all(), $rules);
             if ($valaditor->fails()) {
-                return response()->json($valaditor->errors(), 401); //400 envalies responce
+                return response()->json($valaditor->errors(), 400); //400 envalies responce
             }
             $checkingData = CompanyName::where("company_id", $r->company_id)->where("customer_id", auth()->user()->id)->first();
-            if (empty($checkingData)) {
+            if (!empty($checkingData)) {
                 $checkingData2 = CompanyName::where("company_id", $r->company_id)->where("customer_id", auth()->user()->id)->first();
                 if (!empty($checkingData2)) {
                     $data = CompanyName::where("company_id", $r->company_id)->update([
