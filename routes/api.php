@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\MastarController;
 use App\Http\Controllers\user\SellersLabel;
 use App\Http\Controllers\user\User;
 use Illuminate\Http\Request;
@@ -30,10 +31,27 @@ Route::post('/login',[User::class,'login']);
 
 
 
+
 Route::middleware('auth:sanctum','ability:U')->group(function(){
     Route::get('view-auth',[User::class,'getview']);
 
     Route::post('/add_sellers',[SellersLabel::class,'createSellers']);
     //===================logout=========================
     Route::post('/logout',[User::class,'logout']);
+});
+
+
+Route::middleware('auth:sanctum','ability:A')->group(function(){
+    Route::name('mastar.')->prefix('master')->group(function() {
+        Route::post('/add_company_name',[MastarController::class,'add_company_name']);
+        Route::get('/company_name',[MastarController::class,'company_name']);
+        Route::post('/edit_company_name',[MastarController::class,'edit_company_name']);
+        Route::post('/delete_company_name',[MastarController::class,'delete_company_name']);
+
+
+        Route::post('/add_product_name',[MastarController::class,'add_product_name']);
+        Route::get('/product_name',[MastarController::class,'product_name']);
+        Route::post('/edit_product_name',[MastarController::class,'edit_product_name']);
+        Route::post('/delete_product_name',[MastarController::class,'delete_product_name']);
+    });
 });

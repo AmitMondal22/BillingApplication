@@ -178,7 +178,7 @@ class User extends Controller
                     'status' => true,
                     'message' => 'Password Change Successfully',
                     'user' => $data,
-                    'token' => $data->createToken($data->name, ['U'])->plainTextToken
+                    'token' => $data->createToken($data->name, ['A'])->plainTextToken
                 ], 200);
             } else {
                 return response()->json([
@@ -212,4 +212,43 @@ class User extends Controller
         ];
         return auth()->user();
     }
+
+    public function login_outlet(Request $r)
+    {
+        $rules = [
+            'email' => 'required|email',
+            'password' => 'required|string|min:8|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&]/',
+        ];
+        $valaditor = Validator::make($r->all(), $rules);
+        if ($valaditor->fails()) {
+            return response()->json($valaditor->errors(), 401); //400 envalies responce
+        }
+
+        $data = ModelsUser::where('email', $r->email)->where('otp_status', 'A')->first();
+
+        if (!empty($data)) {
+            if (Hash::check($r->password, $data->password)) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Password Change Successfully',
+                    'user' => $data,
+                    'token' => $data->createToken($data->name, ['A'])->plainTextToken
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'password not match',
+
+                ], 401);
+            }
+        } else {
+            return response()->json([
+                'status' => true,
+                'message' => 'Logout Successfully',
+
+            ], 401);
+        }
+    }
+
+
 }
