@@ -168,7 +168,7 @@ class MastarController extends Controller
             $checkingData = Product::where("customer_id", auth()->user()->id)->get();
             return response()->json([
                 "data" => $checkingData,
-                "status" => false
+                "status" => true
             ], 200);
         } catch (\Throwable $th) {
             return response()->json($th, 400);
@@ -181,17 +181,17 @@ class MastarController extends Controller
         try {
             $rules = [
                 'product_name' => 'required|string',
-                'priduct_id' => 'required|numeric'
+                'product_id' => 'required|numeric'
             ];
             $valaditor = Validator::make($r->all(), $rules);
             if ($valaditor->fails()) {
                 return response()->json($valaditor->errors(), 401); //400 envalies responce
             }
-            $checkingData = Product::where("product_name", $r->product_name)->where("customer_id", auth()->user()->id)->first();
-            if (empty($checkingData)) {
-                $checkingData2 = Product::where("priduct_id", $r->priduct_id)->where("customer_id", auth()->user()->id)->first();
-                if (!empty($checkingData2)) {
-                    $data = Product::where("priduct_id", $r->priduct_id)->update([
+            $checkingData = Product::where("product_id", $r->product_id)->where("customer_id", auth()->user()->id)->first();
+            if (!empty($checkingData)) {
+                $checkingData2 = Product::where("product_name", $r->product_name)->where("customer_id", auth()->user()->id)->first();
+                if (empty($checkingData2)) {
+                    $data = Product::where("product_id", $r->product_id)->update([
                         "product_name" => $r->product_name,
                         "updated_by" => auth()->user()->id
                     ]);
@@ -220,15 +220,15 @@ class MastarController extends Controller
     {
         try {
             $rules = [
-                'priduct_id' => 'required|numeric'
+                'product_id' => 'required|numeric'
             ];
             $valaditor = Validator::make($r->all(), $rules);
             if ($valaditor->fails()) {
                 return response()->json($valaditor->errors(), 400); //400 envalies responce
             }
-            $checkingData = Product::where("priduct_id", $r->priduct_id)->where("customer_id", auth()->user()->id)->first();
+            $checkingData = Product::where("product_id", $r->product_id)->where("customer_id", auth()->user()->id)->first();
             if (!empty($checkingData)) {
-                $data = Product::where("priduct_id", $r->priduct_id)->delete();
+                $data = Product::where("product_id", $r->product_id)->delete();
                 return response()->json([
                     "data" => $data,
                     "status" => true
@@ -287,7 +287,7 @@ class MastarController extends Controller
     {
         try {
             $checkingData = MastarModel::join("company_list AS a","a.company_id","=","model.company_id")
-                            ->join("procuct AS b","b.priduct_id","=","model.product_id")
+                            ->join("procuct AS b","b.product_id","=","model.product_id")
                             ->where("model.customer_id", auth()->user()->id)->select('model.*','a.company_name','b.product_name')->get();
             return response()->json([
                 "data" => $checkingData,
@@ -304,7 +304,7 @@ class MastarController extends Controller
         try {
             $rules = [
                 'product_name' => 'required|string',
-                'priduct_id' => 'required|numeric'
+                'product_id' => 'required|numeric'
             ];
             $valaditor = Validator::make($r->all(), $rules);
             if ($valaditor->fails()) {
@@ -312,9 +312,9 @@ class MastarController extends Controller
             }
             $checkingData = Product::where("product_name", $r->product_name)->where("customer_id", auth()->user()->id)->first();
             if (empty($checkingData)) {
-                $checkingData2 = Product::where("priduct_id", $r->priduct_id)->where("customer_id", auth()->user()->id)->first();
+                $checkingData2 = Product::where("product_id", $r->product_id)->where("customer_id", auth()->user()->id)->first();
                 if (!empty($checkingData2)) {
-                    $data = Product::where("priduct_id", $r->priduct_id)->update([
+                    $data = Product::where("product_id", $r->product_id)->update([
                         "product_name" => $r->product_name,
                         "updated_by" => auth()->user()->id
                     ]);
@@ -343,15 +343,15 @@ class MastarController extends Controller
     {
         try {
             $rules = [
-                'priduct_id' => 'required|numeric'
+                'product_id' => 'required|numeric'
             ];
             $valaditor = Validator::make($r->all(), $rules);
             if ($valaditor->fails()) {
                 return response()->json($valaditor->errors(), 400); //400 envalies responce
             }
-            $checkingData = Product::where("priduct_id", $r->priduct_id)->where("customer_id", auth()->user()->id)->first();
+            $checkingData = Product::where("product_id", $r->product_id)->where("customer_id", auth()->user()->id)->first();
             if (!empty($checkingData)) {
-                $data = Product::where("priduct_id", $r->priduct_id)->delete();
+                $data = Product::where("product_id", $r->product_id)->delete();
                 return response()->json([
                     "data" => $data,
                     "status" => true
