@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\MastarController;
+use App\Http\Controllers\admin\StoreStock;
 use App\Http\Controllers\user\SellersLabel;
 use App\Http\Controllers\user\User;
 use Illuminate\Http\Request;
@@ -59,5 +60,12 @@ Route::middleware('auth:sanctum','ability:A')->group(function(){
         Route::get('/model_name',[MastarController::class,'model_name']);
         Route::post('/edit_model_name',[MastarController::class,'edit_model_name']);
         Route::post('/delete_model_name',[MastarController::class,'delete_model_name']);
+    });
+
+    Route::name('stock.')->prefix('stock')->group(function() {
+        Route::post('/in',[StoreStock::class,'stockIn']);
+        // Route::get('/model_name',[MastarController::class,'model_name']);
+        Route::post('/edit',[StoreStock::class,'edit_stockIn']);
+        // Route::post('/delete_model_name',[MastarController::class,'delete_model_name']);
     });
 });
