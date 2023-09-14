@@ -12,6 +12,7 @@ class CompanyName extends Model
     protected $table = "company_list";
     protected $primaryKey = 'company_id';
 
+    
 
     protected $fillable = [
         "company_name", "customer_id", "created_by", "updated_by"
