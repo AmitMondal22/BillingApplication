@@ -64,8 +64,8 @@ Route::middleware('auth:sanctum','ability:A')->group(function(){
 
     Route::name('stock.')->prefix('stock')->group(function() {
         Route::post('/in',[StoreStock::class,'stockIn']);
-        // Route::get('/model_name',[MastarController::class,'model_name']);
+        Route::get('/stock_product',[StoreStock::class,'stock_product']);
         Route::post('/edit',[StoreStock::class,'edit_stockIn']);
-        // Route::post('/delete_model_name',[MastarController::class,'delete_model_name']);
+        Route::post('/delete',[StoreStock::class,'delete_stock']);
     });
 });

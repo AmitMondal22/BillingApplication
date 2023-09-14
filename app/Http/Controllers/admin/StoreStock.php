@@ -43,9 +43,6 @@ class StoreStock extends Controller
                 "customer_id" => auth()->user()->id,
                 "created_by" => auth()->user()->id
             ]);
-
-
-
             return response()->json([
                 "data" => "Stock In Success !",
                 "status" => true
@@ -77,7 +74,8 @@ class StoreStock extends Controller
             if ($valaditor->fails()) {
                 return response()->json($valaditor->errors(), 400);
             }
-            $upatateData=StorIn::where("product_store_id",$r->product_store_id)->where("sales_flags","Y")->update([
+            $upatateData=StorIn::where("product_store_id",$r->product_store_id)->where("sales_flags","N")
+            ->update([
                 "model_id" => $r->model_id,
                 "serial_number" => $r->serial_number,
                 "purchase_rate" => $r->purchase_rate,
@@ -95,6 +93,47 @@ class StoreStock extends Controller
 
             return response()->json([
                 "data" => $upatateData,
+                "status" => true
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
+    }
+
+
+
+    function delete_stock(Request $r)
+    {
+        try {
+            $rules = [
+                'product_store_id' => 'required|numeric'
+            ];
+            $valaditor = Validator::make($r->all(), $rules);
+            if ($valaditor->fails()) {
+                return response()->json($valaditor->errors(), 400); //400 envalies responce
+            }
+
+                $data = StorIn::where("product_store_id",$r->product_store_id)->where("sales_flags","N")->delete();
+                return response()->json([
+                    "data" => $data,
+                    "status" => true
+                ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
+    }
+
+
+    function stock_product() {
+        try {
+            $checkingData = StorIn::join("model AS b",'b.model_id','=','td_product_store.model_id')
+            ->join("procuct AS c",'c.product_id','=','b.product_id')
+            ->join("company_list AS d",'d.company_id','=','b.company_id')
+            ->whereIn('sales_flags',['N','P'])
+            ->select("td_product_store.product_store_id","td_product_store.serial_number","td_product_store.purchase_rate","td_product_store.sales_rate","td_product_store.purchase_date","td_product_store.cgst_p","td_product_store.sgst_p","td_product_store.sales_flags","b.model_name","c.product_name","d.company_name")->paginate(25);
+            return response()->json([
+                "data" => $checkingData,
                 "status" => true
             ], 200);
         } catch (\Throwable $th) {
