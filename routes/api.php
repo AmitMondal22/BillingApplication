@@ -67,5 +67,6 @@ Route::middleware('auth:sanctum','ability:A')->group(function(){
         Route::get('/stock_product',[StoreStock::class,'stock_product']);
         Route::post('/edit',[StoreStock::class,'edit_stockIn']);
         Route::post('/delete',[StoreStock::class,'delete_stock']);
+        Route::post('/find_product',[StoreStock::class,'find_product']);
     });
 });

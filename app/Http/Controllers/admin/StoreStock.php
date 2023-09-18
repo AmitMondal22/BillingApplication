@@ -132,7 +132,35 @@ class StoreStock extends Controller
                 ->join("procuct AS c", 'c.product_id', '=', 'b.product_id')
                 ->join("company_list AS d", 'd.company_id', '=', 'b.company_id')
                 ->whereIn('sales_flags', ['N', 'P'])
-                ->select("td_product_store.product_store_id", "td_product_store.serial_number", "td_product_store.purchase_rate", "td_product_store.sales_rate", "td_product_store.purchase_date", "td_product_store.cgst_p", "td_product_store.sgst_p", "td_product_store.sales_flags", "b.model_name", "c.product_name", "d.company_name")->paginate(25);
+                ->select("td_product_store.*", "b.model_name", "c.product_name", "d.company_name")->paginate(25);
+            return response()->json([
+                "data" => $checkingData,
+                "status" => true
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
+    }
+
+
+    function find_product(Request $r)
+    {
+        try {
+
+            $rules = [
+                "serial_number" => 'required'
+            ];
+            $valaditor = Validator::make($r->all(), $rules);
+            if ($valaditor->fails()) {
+                return response()->json($valaditor->errors(), 400);
+            }
+
+            $checkingData = StorIn::join("model AS b", 'b.model_id', '=', 'td_product_store.model_id')
+                ->join("procuct AS c", 'c.product_id', '=', 'b.product_id')
+                ->join("company_list AS d", 'd.company_id', '=', 'b.company_id')
+                ->whereIn('sales_flags', ['N', 'P'])
+                ->where("td_product_store.serial_number",'like', '%'.$r->serial_number.'%')
+                ->select("td_product_store.*", "b.model_name", "c.product_name", "d.company_name")->paginate(25);
             return response()->json([
                 "data" => $checkingData,
                 "status" => true
