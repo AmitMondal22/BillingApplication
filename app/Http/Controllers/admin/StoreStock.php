@@ -134,7 +134,7 @@ class StoreStock extends Controller
                 ->join("procuct AS c", 'c.product_id', '=', 'b.product_id')
                 ->join("company_list AS d", 'd.company_id', '=', 'b.company_id')
                 ->whereIn('sales_flags', ['N', 'P'])
-                ->select("td_product_store.*", "b.model_name", "c.product_name", "d.company_name")->paginate(1);
+                ->select("td_product_store.*", "b.model_name", "c.product_name", "d.company_name")->paginate(20);
             return response()->json([
                 "data" => $checkingData,
                 "status" => true
