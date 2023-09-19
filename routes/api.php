@@ -69,7 +69,8 @@ Route::middleware('auth:sanctum','ability:A')->group(function(){
         Route::post('/delete',[StoreStock::class,'delete_stock']);
         Route::post('/find_product',[StoreStock::class,'find_product']);
     });
+
     Route::name('billing.')->prefix('billing')->group(function() {
         Route::post('/new',[StoreStock::class,'billing']);
-    }):
+    });
 });
