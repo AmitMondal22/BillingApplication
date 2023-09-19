@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\StorIn;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Stmt\TryCatch;
 
@@ -159,12 +161,53 @@ class StoreStock extends Controller
                 ->join("procuct AS c", 'c.product_id', '=', 'b.product_id')
                 ->join("company_list AS d", 'd.company_id', '=', 'b.company_id')
                 ->whereIn('sales_flags', ['N', 'P'])
-                ->where("td_product_store.serial_number",'like', '%'.$r->serial_number.'%')
-                ->select("td_product_store.*", "b.model_name", "c.product_name", "d.company_name")->paginate(25);
+                ->where("td_product_store.serial_number", 'like', '%' . $r->serial_number . '%')
+                ->select("td_product_store.*", "b.model_name", "c.product_name", "d.company_name")->paginate(1);
             return response()->json([
                 "data" => $checkingData,
                 "status" => true
             ], 200);
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
+    }
+
+
+    function billing(Request $r)
+    {
+        try {
+            $rules = [
+                "serial_number" => 'required',
+                "customer_id" => 'string',
+                'name' => 'required',
+                'mobile' => 'numeric',
+                'address' => 'string',
+            ];
+            $valaditor = Validator::make($r->all(), $rules);
+            if ($valaditor->fails()) {
+                return response()->json($valaditor->errors(), 400);
+            }
+            $userid=$r->customer_id;
+
+            if (!$r->customer_id) {
+                $data=Customer::create([
+                    "name"=>$r->name,
+                    "mobile_no"=>$r->mobile,
+                    "adress"=>$r->address,
+                    "password"=>Hash::make($r->mobile),
+                    "role"=>"PU",
+                    "otp"=>0,
+                    "otp_status"=>'A',
+                    "user_type"=>"PU",
+                    "deleted_flag"=>'N',
+                    "created_by"=>auth()->user()->id
+                ]);
+                $userid=$data->id;
+            }
+
+
+
+
         } catch (\Throwable $th) {
             return response()->json($th, 400);
         }
