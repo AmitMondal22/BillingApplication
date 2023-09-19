@@ -175,41 +175,41 @@ class StoreStock extends Controller
 
     function billing(Request $r)
     {
-        try {
-            $rules = [
-                "serial_number" => 'required',
-                "customer_id" => 'string',
-                'name' => 'required',
-                'mobile' => 'numeric',
-                'address' => 'string',
-            ];
-            $valaditor = Validator::make($r->all(), $rules);
-            if ($valaditor->fails()) {
-                return response()->json($valaditor->errors(), 400);
-            }
-            $userid=$r->customer_id;
+        // try {
+        //     $rules = [
+        //         "serial_number" => 'required',
+        //         "customer_id" => 'string',
+        //         'name' => 'required',
+        //         'mobile' => 'numeric',
+        //         'address' => 'string',
+        //     ];
+        //     $valaditor = Validator::make($r->all(), $rules);
+        //     if ($valaditor->fails()) {
+        //         return response()->json($valaditor->errors(), 400);
+        //     }
+        //     $userid=$r->customer_id;
 
-            if (!$r->customer_id) {
-                $data=Customer::create([
-                    "name"=>$r->name,
-                    "mobile_no"=>$r->mobile,
-                    "adress"=>$r->address,
-                    "password"=>Hash::make($r->mobile),
-                    "role"=>"PU",
-                    "otp"=>0,
-                    "otp_status"=>'A',
-                    "user_type"=>"PU",
-                    "deleted_flag"=>'N',
-                    "created_by"=>auth()->user()->id
-                ]);
-                $userid=$data->id;
-            }
-
-
+        //     if (!$r->customer_id) {
+        //         $data=Customer::create([
+        //             "name"=>$r->name,
+        //             "mobile_no"=>$r->mobile,
+        //             "adress"=>$r->address,
+        //             "password"=>Hash::make($r->mobile),
+        //             "role"=>"PU",
+        //             "otp"=>0,
+        //             "otp_status"=>'A',
+        //             "user_type"=>"PU",
+        //             "deleted_flag"=>'N',
+        //             "created_by"=>auth()->user()->id
+        //         ]);
+        //         $userid=$data->id;
+        //     }
 
 
-        } catch (\Throwable $th) {
-            return response()->json($th, 400);
-        }
+
+
+        // } catch (\Throwable $th) {
+        //     return response()->json($th, 400);
+        // }
     }
 }
