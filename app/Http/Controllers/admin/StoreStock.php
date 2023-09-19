@@ -127,13 +127,29 @@ class StoreStock extends Controller
     }
 
 
-    function stock_product()
+    function stock_product(Request $r)
     {
+
+
         try {
+            $searchKeyword=$r->search;
             $checkingData = StorIn::join("model AS b", 'b.model_id', '=', 'td_product_store.model_id')
                 ->join("procuct AS c", 'c.product_id', '=', 'b.product_id')
                 ->join("company_list AS d", 'd.company_id', '=', 'b.company_id')
                 ->whereIn('sales_flags', ['N', 'P'])
+                ->where(function ($query) use ($searchKeyword) {
+                    $query->where('b.model_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('c.product_name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('td_product_store.serial_number', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('td_product_store.purchase_rate', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('td_product_store.sales_rate', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('td_product_store.purchase_date', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('td_product_store.warranty_expired', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('td_product_store.cgst_p', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('td_product_store.sgst_p', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('td_product_store.created_at', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('d.company_name', 'LIKE', '%' . $searchKeyword . '%');
+                })
                 ->select("td_product_store.*", "b.model_name", "c.product_name", "d.company_name")->paginate(20);
             return response()->json([
                 "data" => $checkingData,
