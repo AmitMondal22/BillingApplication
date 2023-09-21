@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\CustomerController;
 use App\Http\Controllers\admin\MastarController;
 use App\Http\Controllers\admin\StoreStock;
 use App\Http\Controllers\user\SellersLabel;
@@ -72,5 +73,11 @@ Route::middleware('auth:sanctum','ability:A')->group(function(){
 
     Route::name('billing.')->prefix('billing')->group(function() {
         Route::post('/new',[StoreStock::class,'billing']);
+    });
+
+    Route::name('customer.')->prefix('customer')->group(function() {
+        Route::post('/serch_customer_mobile',[CustomerController
+        ::class,'mycustomer']);
+
     });
 });
