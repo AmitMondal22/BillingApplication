@@ -197,26 +197,26 @@ class StoreStock extends Controller
     function billing(Request $r)
     {
         try {
-            $rules = [
-                "serial_number" => 'required',
-                "customer_id" => 'numeric',
-                'name' => 'required',
-                'mobile' => 'numeric',
-                'address' => 'string',
-                'data' => 'required',
-            ];
-            $valaditor = Validator::make($r->all(), $rules);
-            if ($valaditor->fails()) {
-                return response()->json($valaditor->errors(), 400);
-            }
+            // $rules = [
+            //     "serial_number" => 'required',
+            //     "customer_id" => 'numeric',
+            //     'name' => 'required',
+            //     'mobile' => 'numeric',
+            //     'address' => 'string',
+            //     'data' => 'required',
+            // ];
+            // $valaditor = Validator::make($r->all(), $rules);
+            // if ($valaditor->fails()) {
+            //     return response()->json($valaditor->errors(), 400);
+            // }
 
 
             if (0 != $r->customer_id) {
                 $data = Customer::create([
-                    "name" => $r->name,
-                    "mobile_no" => $r->mobile,
-                    "adress" => $r->address,
-                    "password" => Hash::make($r->mobile),
+                    "name" => $r->c_name,
+                    "mobile_no" => $r->p_num,
+                    "adress" => $r->c_add,
+                    "password" => Hash::make($r->p_num),
                     "role" => "PU",
                     "otp" => 0,
                     "otp_status" => 'A',
@@ -231,7 +231,7 @@ class StoreStock extends Controller
 
 
             Sales::select("billing_id")->latest()->first();
-            foreach ($r->data as $stordata) {
+            foreach ($r->sl_no as $stordata) {
                 Sales::create([
                     "billing_id" => 1,
                     "stock_id" => $stordata->barcode_no,
