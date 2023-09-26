@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Sales;
 use App\Models\StorIn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -132,7 +133,7 @@ class StoreStock extends Controller
 
 
         try {
-            $searchKeyword=$r->search;
+            $searchKeyword = $r->search;
             $checkingData = StorIn::join("model AS b", 'b.model_id', '=', 'td_product_store.model_id')
                 ->join("procuct AS c", 'c.product_id', '=', 'b.product_id')
                 ->join("company_list AS d", 'd.company_id', '=', 'b.company_id')
@@ -198,36 +199,52 @@ class StoreStock extends Controller
         try {
             $rules = [
                 "serial_number" => 'required',
-                "customer_id" => 'string',
+                "customer_id" => 'numeric',
                 'name' => 'required',
                 'mobile' => 'numeric',
                 'address' => 'string',
+                'data' => 'required',
             ];
             $valaditor = Validator::make($r->all(), $rules);
             if ($valaditor->fails()) {
                 return response()->json($valaditor->errors(), 400);
             }
-            $userid=$r->customer_id;
 
-            if (!$r->customer_id) {
-                $data=Customer::create([
-                    "name"=>$r->name,
-                    "mobile_no"=>$r->mobile,
-                    "adress"=>$r->address,
-                    "password"=>Hash::make($r->mobile),
-                    "role"=>"PU",
-                    "otp"=>0,
-                    "otp_status"=>'A',
-                    "user_type"=>"PU",
-                    "deleted_flag"=>'N',
-                    "created_by"=>auth()->user()->id
+
+            if (0 != $r->customer_id) {
+                $data = Customer::create([
+                    "name" => $r->name,
+                    "mobile_no" => $r->mobile,
+                    "adress" => $r->address,
+                    "password" => Hash::make($r->mobile),
+                    "role" => "PU",
+                    "otp" => 0,
+                    "otp_status" => 'A',
+                    "user_type" => "PU",
+                    "deleted_flag" => 'N',
+                    "created_by" => auth()->user()->id
                 ]);
-                $userid=$data->id;
+                $userid = $data->id;
+            } else {
+                $userid = $r->customer_id;
             }
 
 
+            Sales::select("billing_id")->latest()->first();
+            foreach ($r->data as $stordata) {
+                Sales::create([
+                    "billing_id" => 1,
+                    "stock_id" => $stordata->barcode_no,
+                    "price" => $stordata->price,
+                    "payment_flag" => $stordata->n,
+                    "billingdate" => $stordata->n,
+                    "created_by" => auth()->user()->id,
+                ]);
 
-
+                StorIn::where('product_store_id',$stordata->product_store_id)->update([
+                    "sels_warranty"=>$stordata->warranty
+                ]);
+            }
         } catch (\Throwable $th) {
             return response()->json($th, 400);
         }

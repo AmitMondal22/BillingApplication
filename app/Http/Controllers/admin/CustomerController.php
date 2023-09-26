@@ -20,10 +20,16 @@ class CustomerController extends Controller
             }
 
             $custData=Customer::where("mobile_no",$r->mobile_no)->first();
+            if($custData){
+                return response()->json([
+                    "data" => $custData,
+                    "status" => true
+                ], 200);
+            }
             return response()->json([
                 "data" => $custData,
-                "status" => true
-            ], 200);
+                "status" => false
+            ], 400);
         } catch (\Throwable $th) {
             return response()->json($th, 400);
         }
