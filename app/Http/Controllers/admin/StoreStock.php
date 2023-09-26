@@ -236,8 +236,9 @@ class StoreStock extends Controller
                     "billing_id" => 1,
                     "stock_id" => $stordata->barcode_no,
                     "price" => $stordata->price,
-                    "payment_flag" => $stordata->n,
-                    "billingdate" => $stordata->n,
+                    "payment_flag" =>'Y',
+                    "cust_id"=>$userid,
+                    "billingdate" => date('yyyy-mm-dd'),
                     "created_by" => auth()->user()->id,
                 ]);
 
@@ -245,6 +246,7 @@ class StoreStock extends Controller
                     "sels_warranty"=>$stordata->warranty
                 ]);
             }
+            return response()->json("success", 200);
         } catch (\Throwable $th) {
             return response()->json($th, 400);
         }

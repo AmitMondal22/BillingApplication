@@ -15,6 +15,6 @@ class Sales extends Model
 
 
     protected $fillable = [
-        "billing_id", "stock_id", "price", "cgst", "sgst", "payment_flag", "billingdate", "created_by", "updated_by"
+        "billing_id", "stock_id", "price", "cgst", "sgst", "payment_flag", "billingdate", "cust_id","created_by", "updated_by"
     ];
 }
