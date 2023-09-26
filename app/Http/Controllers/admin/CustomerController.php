@@ -29,7 +29,7 @@ class CustomerController extends Controller
             return response()->json([
                 "data" => $custData,
                 "status" => false
-            ], 400);
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json($th, 400);
         }
