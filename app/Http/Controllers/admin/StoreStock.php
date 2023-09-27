@@ -198,12 +198,11 @@ class StoreStock extends Controller
     {
         try {
             $rules = [
-                "serial_number" => 'required',
+                "sl_no" => 'required',
                 "customer_id" => 'numeric',
-                'name' => 'required',
-                'mobile' => 'numeric',
-                'address' => 'string',
-                'data' => 'required',
+                'c_name' => 'required',
+                'p_num' => 'numeric',
+                'c_add' => 'string',
             ];
             $valaditor = Validator::make($r->all(), $rules);
             if ($valaditor->fails()) {
