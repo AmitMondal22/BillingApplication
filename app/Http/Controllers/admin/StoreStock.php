@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Sales;
 use App\Models\StorIn;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -199,10 +200,13 @@ class StoreStock extends Controller
         try {
             $rules = [
                 "sl_no" => 'required',
-                "customer_id" => 'numeric|required',
+                "c_id" => 'numeric|required',
                 'c_name' => 'required',
                 'p_num' => 'numeric|required',
                 'c_add' => 'string|required',
+                'total_amt' => 'numeric|required',
+                'paid_status' => 'string|required',
+
             ];
             $valaditor = Validator::make($r->all(), $rules);
             if ($valaditor->fails()) {
@@ -227,25 +231,33 @@ class StoreStock extends Controller
             } else {
                 $userid = $r->c_id;
             }
+           $pymentStatus= ($r->paid_status=="paid")?'P':'D';
 
-
-            Sales::select("billing_id")->latest()->first();
+            $databar=Sales::select("billing_id")->latest()->firstOr(['billing_id' => 0]);
             foreach ($r->sl_no as $stordata) {
                 // return $stordata['barcode_no'];
                 Sales::create([
-                    "billing_id" => 1,
+                    "billing_id" => $databar->billing_id+1,
                     "stock_id" => $stordata['barcode_no'],
                     "price" => $stordata['price'],
-                    "payment_flag" =>'P',
+                    "payment_flag" =>$pymentStatus,
                     "cust_id"=>$userid,
                     "billingdate" => date('Y-m-d'),
                     "created_by" => auth()->user()->id,
                 ]);
-
                 StorIn::where('product_store_id',$stordata['product_store_id'])->update([
                     "sels_warranty"=>$stordata['warranty']
                 ]);
             }
+
+            Transaction::create([
+                "billing_id"=>$databar->billing_id+1,
+                "payment_flag"=>$pymentStatus,
+                "amount"=>$r->total_amt,
+                "customer_id"=>$userid,
+                "transaction_date"=> date('Y-m-d'),
+                "created_by"=>auth()->user()->id
+            ]);
             return response()->json("success", 200);
         } catch (\Throwable $th) {
             return response()->json($th, 400);
