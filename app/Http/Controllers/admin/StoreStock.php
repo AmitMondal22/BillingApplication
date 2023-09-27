@@ -196,22 +196,21 @@ class StoreStock extends Controller
 
     function billing(Request $r)
     {
-        // try {
-            // $rules = [
-            //     "serial_number" => 'required',
-            //     "customer_id" => 'numeric',
-            //     'name' => 'required',
-            //     'mobile' => 'numeric',
-            //     'address' => 'string',
-            //     'data' => 'required',
-            // ];
-            // $valaditor = Validator::make($r->all(), $rules);
-            // if ($valaditor->fails()) {
-            //     return response()->json($valaditor->errors(), 400);
-            // }
+        try {
+            $rules = [
+                "serial_number" => 'required',
+                "customer_id" => 'numeric',
+                'name' => 'required',
+                'mobile' => 'numeric',
+                'address' => 'string',
+                'data' => 'required',
+            ];
+            $valaditor = Validator::make($r->all(), $rules);
+            if ($valaditor->fails()) {
+                return response()->json($valaditor->errors(), 400);
+            }
 
-// return "djkfhkj";
-// return $r->c_add;
+
             if (0 == $r->c_id) {
                 $data = Customer::create([
                     "name" => $r->c_name,
@@ -249,8 +248,8 @@ class StoreStock extends Controller
                 ]);
             }
             return response()->json("success", 200);
-        // } catch (\Throwable $th) {
-        //     return response()->json($th, 400);
-        // }
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
     }
 }
