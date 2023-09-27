@@ -210,8 +210,9 @@ class StoreStock extends Controller
             //     return response()->json($valaditor->errors(), 400);
             // }
 
-
-            if (0 != $r->customer_id) {
+// return "djkfhkj";
+// return $r->c_add;
+            if (0 == $r->c_id) {
                 $data = Customer::create([
                     "name" => $r->c_name,
                     "mobile_no" => $r->p_num,
@@ -226,24 +227,25 @@ class StoreStock extends Controller
                 ]);
                 $userid = $data->id;
             } else {
-                $userid = $r->customer_id;
+                $userid = $r->c_id;
             }
 
 
             Sales::select("billing_id")->latest()->first();
             foreach ($r->sl_no as $stordata) {
+                // return $stordata['barcode_no'];
                 Sales::create([
                     "billing_id" => 1,
-                    "stock_id" => $stordata->barcode_no,
-                    "price" => $stordata->price,
-                    "payment_flag" =>'Y',
+                    "stock_id" => $stordata['barcode_no'],
+                    "price" => $stordata['price'],
+                    "payment_flag" =>'P',
                     "cust_id"=>$userid,
-                    "billingdate" => date('yyyy-mm-dd'),
+                    "billingdate" => date('Y-m-d'),
                     "created_by" => auth()->user()->id,
                 ]);
 
-                StorIn::where('product_store_id',$stordata->product_store_id)->update([
-                    "sels_warranty"=>$stordata->warranty
+                StorIn::where('product_store_id',$stordata['product_store_id'])->update([
+                    "sels_warranty"=>$stordata['warranty']
                 ]);
             }
             return response()->json("success", 200);
