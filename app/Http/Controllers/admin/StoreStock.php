@@ -196,7 +196,7 @@ class StoreStock extends Controller
 
     function billing(Request $r)
     {
-        try {
+        // try {
             // $rules = [
             //     "serial_number" => 'required',
             //     "customer_id" => 'numeric',
@@ -249,8 +249,8 @@ class StoreStock extends Controller
                 ]);
             }
             return response()->json("success", 200);
-        } catch (\Throwable $th) {
-            return response()->json($th, 400);
-        }
+        // } catch (\Throwable $th) {
+        //     return response()->json($th, 400);
+        // }
     }
 }
