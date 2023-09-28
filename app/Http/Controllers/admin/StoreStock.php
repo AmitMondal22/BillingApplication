@@ -267,13 +267,13 @@ class StoreStock extends Controller
 
     public function allbill()
     {
-        // try {
+        try {
             $data=DB::table('td_sales')
-            ->select('billing_id', DB::raw('SUM(price) as total_price'), DB::raw('MAX(created_by) as created_by'))
+            ->select('billing_id', DB::raw('SUM(price) as total_price'), DB::raw('MAX(created_by) as created_by'), DB::raw('MAX(billingdate) as billingdate'))
             ->groupBy('billing_id')->paginate(2);
             return response()->json($data, 200);
-        // } catch (\Throwable $th) {
-        //     return response()->json($th, 400);
-        // }
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
     }
 }
