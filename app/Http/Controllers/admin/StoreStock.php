@@ -8,6 +8,7 @@ use App\Models\Sales;
 use App\Models\StorIn;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Stmt\TryCatch;
@@ -213,7 +214,6 @@ class StoreStock extends Controller
                 return response()->json($valaditor->errors(), 400);
             }
 
-
             if (0 == $r->c_id) {
                 $data = Customer::create([
                     "name" => $r->c_name,
@@ -231,36 +231,49 @@ class StoreStock extends Controller
             } else {
                 $userid = $r->c_id;
             }
-           $pymentStatus= ($r->paid_status=="paid")?'P':'D';
+            $pymentStatus = ($r->paid_status == "paid") ? 'P' : 'D';
 
-            $databar=Sales::select("billing_id")->latest()->firstOr(['billing_id' => 0]);
+            $databar = Sales::select("billing_id")->latest()->firstOr(['billing_id' => 0]);
             foreach ($r->sl_no as $stordata) {
                 // return $stordata['barcode_no'];
                 Sales::create([
-                    "billing_id" => $databar->billing_id+1,
+                    "billing_id" => $databar->billing_id + 1,
                     "stock_id" => $stordata['barcode_no'],
                     "price" => $stordata['price'],
-                    "payment_flag" =>$pymentStatus,
-                    "cust_id"=>$userid,
+                    "payment_flag" => $pymentStatus,
+                    "cust_id" => $userid,
                     "billingdate" => date('Y-m-d'),
                     "created_by" => auth()->user()->id,
                 ]);
-                StorIn::where('product_store_id',$stordata['product_store_id'])->update([
-                    "sels_warranty"=>$stordata['warranty']
+                StorIn::where('product_store_id', $stordata['product_store_id'])->update([
+                    "sels_warranty" => $stordata['warranty']
                 ]);
             }
 
             Transaction::create([
-                "billing_id"=>$databar->billing_id+1,
-                "payment_flag"=>$pymentStatus,
-                "amount"=>$r->total_amt,
-                "customer_id"=>$userid,
-                "transaction_date"=> date('Y-m-d'),
-                "created_by"=>auth()->user()->id
+                "billing_id" => $databar->billing_id + 1,
+                "payment_flag" => $pymentStatus,
+                "amount" => $r->total_amt,
+                "customer_id" => $userid,
+                "transaction_date" => date('Y-m-d'),
+                "created_by" => auth()->user()->id
             ]);
             return response()->json("success", 200);
         } catch (\Throwable $th) {
             return response()->json($th, 400);
         }
+    }
+
+
+    public function allbill()
+    {
+        // try {
+            $data=DB::table('td_sales')
+            ->select('billing_id', DB::raw('SUM(price) as total_price'), DB::raw('MAX(created_by) as created_by'))
+            ->groupBy('billing_id')->paginate(2);
+            return response()->json($data, 200);
+        // } catch (\Throwable $th) {
+        //     return response()->json($th, 400);
+        // }
     }
 }
