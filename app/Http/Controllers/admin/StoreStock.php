@@ -265,15 +265,34 @@ class StoreStock extends Controller
     }
 
 
-    public function allbill()
+    public function allbill(Request $r)
     {
-        try {
-            $data=DB::table('td_sales')
-            ->select('billing_id', DB::raw('SUM(price) as total_price'), DB::raw('MAX(created_by) as created_by'), DB::raw('MAX(billingdate) as billingdate'))
-            ->groupBy('billing_id')->paginate(2);
+        // try {
+
+            $searchKeyword = $r->search;
+
+            $data=DB::table('td_sales as a')
+            ->select('b.name', 'b.mobile_no', 'a.billing_id', DB::raw('SUM(a.price) as total_price'), DB::raw('MAX(a.created_by) as created_by'), DB::raw('MAX(a.billingdate) as billingdate'))
+            ->join('md_customer as b', 'b.id', '=', 'a.cust_id')
+
+            ->where(function ($query) use ($searchKeyword) {
+                $query->where('b.name', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('b.mobile_no', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('a.billing_id', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('a.price', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('a.created_by', 'LIKE', '%' . $searchKeyword . '%')
+                    ->orWhere('a.billingdate', 'LIKE', '%' . $searchKeyword . '%');
+            })
+            ->groupBy('b.name', 'b.mobile_no', 'a.billing_id')->paginate(2);
+
+
+
+
+
+
             return response()->json($data, 200);
-        } catch (\Throwable $th) {
-            return response()->json($th, 400);
-        }
+        // } catch (\Throwable $th) {
+        //     return response()->json($th, 400);
+        // }
     }
 }
