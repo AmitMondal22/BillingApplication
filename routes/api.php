@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\Billing;
 use App\Http\Controllers\admin\CustomerController;
 use App\Http\Controllers\admin\MastarController;
 use App\Http\Controllers\admin\StoreStock;
@@ -73,6 +74,7 @@ Route::middleware('auth:sanctum', 'ability:A')->group(function () {
 
     Route::name('billing.')->prefix('billing')->group(function () {
         Route::post('/new', [StoreStock::class, 'billing']);
+        Route::post('/data', [Billing::class, 'billing_date']);
     });
 
     Route::name('report.')->prefix('report')->group(function () {
