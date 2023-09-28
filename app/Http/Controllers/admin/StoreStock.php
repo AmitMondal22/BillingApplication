@@ -198,7 +198,7 @@ class StoreStock extends Controller
 
     function billing(Request $r)
     {
-        // try {
+        try {
             $rules = [
                 "sl_no" => 'required',
                 "c_id" => 'numeric|required',
@@ -259,15 +259,15 @@ class StoreStock extends Controller
                 "created_by" => auth()->user()->id
             ]);
             return response()->json("success", 200);
-        // } catch (\Throwable $th) {
-        //     return response()->json($th, 400);
-        // }
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
     }
 
 
     public function allbill(Request $r)
     {
-        // try {
+        try {
 
             $searchKeyword = $r->search;
 
@@ -291,8 +291,8 @@ class StoreStock extends Controller
 
 
             return response()->json($data, 200);
-        // } catch (\Throwable $th) {
-        //     return response()->json($th, 400);
-        // }
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
     }
 }
