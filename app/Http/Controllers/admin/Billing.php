@@ -18,7 +18,7 @@ class Billing extends Controller
             ->join('procuct as d','d.product_id' , '=', 'c.product_id')
             ->join('company_list as e','e.company_id' , '=', 'c.company_id')
             ->where("a.billing_id",$r->billing_id)
-            ->toSql();
+            ->get();
 
 
 
