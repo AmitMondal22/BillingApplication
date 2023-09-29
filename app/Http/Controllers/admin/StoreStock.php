@@ -198,7 +198,9 @@ class StoreStock extends Controller
 
     function billing(Request $r)
     {
-        // try {
+
+
+        try {
             $rules = [
                 "sl_no" => 'required',
                 "c_id" => 'numeric|required',
@@ -233,11 +235,17 @@ class StoreStock extends Controller
             }
             $pymentStatus = ($r->paid_status == "paid") ? 'P' : 'D';
 
-            $databar = Sales::select("billing_id")->latest()->firstOr(['billing_id' => 0]);
+            // $databar = Sales::select("billing_id")->latest()->first()?Sales::select("billing_id")->latest()->first():(['billing_id' => 0]);
+
+
+            $databar = Sales::latest()->first();
+            $bill_id= $databar ? $databar->billing_id : 0;
+
+
             foreach ($r->sl_no as $stordata) {
                 // return $stordata['barcode_no'];
                 Sales::create([
-                    "billing_id" => $databar->billing_id + 1,
+                    "billing_id" => $bill_id + 1,
                     "stock_id" => $stordata['barcode_no'],
                     "price" => $stordata['price'],
                     "payment_flag" => $pymentStatus,
@@ -251,7 +259,7 @@ class StoreStock extends Controller
             }
 
             Transaction::create([
-                "billing_id" => $databar->billing_id + 1,
+                "billing_id" => $bill_id + 1,
                 "payment_flag" => $pymentStatus,
                 "amount" => $r->total_amt,
                 "customer_id" => $userid,
@@ -260,14 +268,14 @@ class StoreStock extends Controller
             ]);
 
             $resData=[
-                'bill_id'=>($databar->billing_id + 1),
+                'bill_id'=>($bill_id + 1),
                 'status'=>"success"
             ];
 
             return response()->json($resData, 200);
-        // } catch (\Throwable $th) {
-        //     return response()->json($th, 400);
-        // }
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
     }
 
 
