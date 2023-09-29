@@ -258,7 +258,13 @@ class StoreStock extends Controller
                 "transaction_date" => date('Y-m-d'),
                 "created_by" => auth()->user()->id
             ]);
-            return response()->json("success", 200);
+
+            $resData=[
+                'bill_id'=>($databar->billing_id + 1),
+                'status'=>"success"
+            ];
+
+            return response()->json($resData, 200);
         } catch (\Throwable $th) {
             return response()->json($th, 400);
         }
