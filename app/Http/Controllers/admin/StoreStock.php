@@ -298,7 +298,7 @@ class StoreStock extends Controller
                     // ->orWhere(DB::raw('SUM(a.price)'), 'LIKE', '%' . $searchKeyword . '%');
                     // ->orWhere('total_price', 'LIKE', '%' . $searchKeyword . '%');
             })
-            ->groupBy('b.name', 'b.mobile_no', 'a.billing_id')->paginate(2);
+            ->groupBy('b.name', 'b.mobile_no', 'a.billing_id')->paginate(20);
 
 
 

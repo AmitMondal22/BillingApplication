@@ -34,4 +34,24 @@ class CustomerController extends Controller
             return response()->json($th, 400);
         }
     }
+
+
+
+    function all_mycustomer(Request $r){
+        try {
+            $custData=Customer::paginate(2);
+            if($custData){
+                return response()->json([
+                    "data" => $custData,
+                    "status" => true
+                ], 200);
+            }
+            return response()->json([
+                "data" => $custData,
+                "status" => false
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
+    }
 }
