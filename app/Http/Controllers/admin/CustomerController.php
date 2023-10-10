@@ -62,12 +62,13 @@ class CustomerController extends Controller
 
     function all_mycustomer_alltrans(Request $r){
         try {
+            $cust=Customer::where('id',$r->id)->get();
             $data=Transaction::select('*')
             ->join('md_customer as b', 'td_transaction.customer_id', '=', 'b.id')
             ->where('td_transaction.customer_id', $r->id)
             ->get();
             return response()->json([
-                "data" => $data,
+                "data" => [$data,$cust],
                 "status" => false
             ], 200);
         } catch (\Throwable $th) {
