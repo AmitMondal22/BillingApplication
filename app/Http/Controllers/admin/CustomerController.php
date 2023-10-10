@@ -62,7 +62,7 @@ class CustomerController extends Controller
 
     function all_mycustomer_alltrans(Request $r){
         try {
-            $cust=Customer::where('id',$r->id)->get();
+            $cust=Customer::where('id',$r->id)->first();
             $data=Transaction::select('*')
             ->join('md_customer as b', 'td_transaction.customer_id', '=', 'b.id')
             ->where('td_transaction.customer_id', $r->id)
