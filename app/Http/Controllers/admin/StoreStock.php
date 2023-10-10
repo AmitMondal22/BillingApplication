@@ -254,7 +254,8 @@ class StoreStock extends Controller
                     "created_by" => auth()->user()->id,
                 ]);
                 StorIn::where('product_store_id', $stordata['product_store_id'])->update([
-                    "sels_warranty" => $stordata['warranty']
+                    "sels_warranty" => $stordata['warranty'],
+                    "sales_flags"=>"Y"
                 ]);
             }
 

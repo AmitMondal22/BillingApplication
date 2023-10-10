@@ -75,4 +75,24 @@ class CustomerController extends Controller
             return response()->json($th, 400);
         }
     }
+
+    function customer_deposit(Request $r){
+        try {
+
+            $data=Transaction::create([
+                "payment_flag"=>'A',
+                "amount"=>$r->amount,
+                "customer_id"=>$r->customer_id,
+                "transaction_date"=>date('Y-m-d'),
+                "created_by"=>auth()->user()->id
+                ]);
+
+            return response()->json([
+                "data" => $data,
+                "status" => false
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
+    }
 }

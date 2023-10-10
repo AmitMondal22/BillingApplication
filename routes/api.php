@@ -89,5 +89,9 @@ Route::middleware('auth:sanctum', 'ability:A')->group(function () {
 
         Route::post('/customer_trans', [CustomerController
         ::class, 'all_mycustomer_alltrans']);
+
+
+        Route::post('/customer_deposit', [CustomerController
+        ::class, 'customer_deposit']);
     });
 });
