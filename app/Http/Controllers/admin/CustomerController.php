@@ -68,7 +68,7 @@ class CustomerController extends Controller
             ->where('td_transaction.customer_id', $r->id)
             ->get();
             return response()->json([
-                "data" => [$data,$cust],
+                "data" => ["trans__details"=>$data,"personal_details"=>$cust],
                 "status" => false
             ], 200);
         } catch (\Throwable $th) {

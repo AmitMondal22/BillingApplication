@@ -75,6 +75,11 @@ Route::middleware('auth:sanctum', 'ability:A')->group(function () {
     Route::name('billing.')->prefix('billing')->group(function () {
         Route::post('/new', [StoreStock::class, 'billing']);
         Route::post('/data', [Billing::class, 'billing_date']);
+
+
+
+
+
     });
 
     Route::name('report.')->prefix('report')->group(function () {
@@ -95,3 +100,5 @@ Route::middleware('auth:sanctum', 'ability:A')->group(function () {
         ::class, 'customer_deposit']);
     });
 });
+
+
