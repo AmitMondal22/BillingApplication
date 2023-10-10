@@ -64,7 +64,7 @@ class CustomerController extends Controller
         try {
             $cust=Customer::where('id',$r->id)->first();
             $data=Transaction::select('*')
-            ->join('md_customer as b', 'td_transaction.customer_id', '=', 'b.id')
+            //->join('md_customer as b', 'td_transaction.customer_id', '=', 'b.id')
             ->where('td_transaction.customer_id', $r->id)
             ->get();
             return response()->json([
