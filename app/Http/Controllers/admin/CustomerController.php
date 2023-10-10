@@ -4,7 +4,9 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
@@ -39,7 +41,7 @@ class CustomerController extends Controller
 
     function all_mycustomer(Request $r){
         try {
-            $custData=Customer::paginate(2);
+            $custData=Customer::paginate(20);
             if($custData){
                 return response()->json([
                     "data" => $custData,
@@ -48,6 +50,24 @@ class CustomerController extends Controller
             }
             return response()->json([
                 "data" => $custData,
+                "status" => false
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
+    }
+
+
+
+
+    function all_mycustomer_alltrans(Request $r){
+        try {
+            $data=Transaction::select('*')
+            ->join('md_customer as b', 'td_transaction.customer_id', '=', 'b.id')
+            ->where('td_transaction.customer_id', $r->id)
+            ->get();
+            return response()->json([
+                "data" => $data,
                 "status" => false
             ], 200);
         } catch (\Throwable $th) {

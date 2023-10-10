@@ -22,7 +22,6 @@ class Billing extends Controller
 
 
 
-
             $cust=DB::table('td_transaction as a')->select('b.id','b.name','b.mobile_no','b.adress')
             ->join("md_customer as b",'b.id','=','a.customer_id')->where('a.billing_id',$r->billing_id)->first();
 
@@ -33,7 +32,10 @@ class Billing extends Controller
 
             return response()->json($resData, 200);
         } catch (\Throwable $th) {
-            //throw $th;
+            return response()->json($th, 400);
         }
     }
+
+
+
 }

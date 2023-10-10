@@ -167,7 +167,7 @@ class User extends Controller
         ];
         $valaditor = Validator::make($r->all(), $rules);
         if ($valaditor->fails()) {
-            return response()->json($valaditor->errors(), 401); //400 envalies responce
+            return response()->json($valaditor->errors(), 401); //400 
         }
 
         $data = ModelsUser::where('email', $r->email)->where('otp_status', 'A')->first();
