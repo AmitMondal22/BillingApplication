@@ -11,7 +11,7 @@ class Billing extends Controller
     function billing_date(Request $r){
         try {
             $data=DB::table('td_sales as a')
-            ->select("a.sales_id","a.billing_id","a.stock_id","a.price", "a.billingdate","a.cust_id","a.created_by",
+            ->select("a.payment_flag","a.sales_id","a.billing_id","a.stock_id","a.price", "a.billingdate","a.cust_id","a.created_by",
             "b.product_store_id","b.serial_number","b.sales_rate", "b.sels_warranty","b.exchange_product_id","b.cgst_p","b.sgst_p","c..model_name","d.product_name","e.company_name")
             ->join('td_product_store as b','b.serial_number' , '=', 'a.stock_id')
             ->join('model as c','c.model_id' , '=', 'b.model_id')
