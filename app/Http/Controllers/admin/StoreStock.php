@@ -208,6 +208,7 @@ class StoreStock extends Controller
                 'p_num' => 'numeric|required',
                 'c_add' => 'string|required',
                 'total_amt' => 'numeric|required',
+                'paid_amt' => 'numeric|required',
                 'paid_status' => 'string|required',
 
             ];
@@ -267,6 +268,19 @@ class StoreStock extends Controller
                 "transaction_date" => date('Y-m-d'),
                 "created_by" => auth()->user()->id
             ]);
+
+
+if($pymentStatus=='D'){
+    Transaction::create([
+                "billing_id" => $bill_id + 1,
+                "payment_flag" => 'A',
+                "amount" => $r->paid_amt,
+                "customer_id" => $userid,
+                "transaction_date" => date('Y-m-d'),
+                "created_by" => auth()->user()->id
+            ]);
+}
+
 
             $resData=[
                 'bill_id'=>($bill_id + 1),
