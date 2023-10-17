@@ -334,17 +334,28 @@ class StoreStock extends Controller
             StorIn::where("serial_number", $r->product_barcode)->update([
                 "exchange_product_id" => $r->new_barcode
             ]);
-            StorIn::where('serial_number', $r->new_barcode)->update([
+
+            Sales::create([
+                    "billing_id" => $r->bill_id,
+                    "stock_id" =>$r->new_barcode,
+                    "price" => 0.0,
+                    "payment_flag" => "P",
+                    "cust_id" => $r->cust_id,
+                    "billingdate" => date('Y-m-d'),
+                    "created_by" => auth()->user()->id,
+                ]);
+                StorIn::where('serial_number', $r->new_barcode)->update([
                 "sales_flags" => "Y"
             ]);
-            Transaction::create([
+
+           /* Transaction::create([
                 "billing_id" => $r->bill_id,
                 "payment_flag" => 'P',
                 "amount" => 0.0,
                 "customer_id" => $r->cust_id,
                 "transaction_date" => date('Y-m-d'),
                 "created_by" => auth()->user()->id
-            ]);
+            ]);*/
 
             $resData = [
                 'bill_id' => $r->bill_id,

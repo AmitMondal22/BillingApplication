@@ -17,6 +17,7 @@ class Billing extends Controller
             ->join('model as c','c.model_id' , '=', 'b.model_id')
             ->join('procuct as d','d.product_id' , '=', 'c.product_id')
             ->join('company_list as e','e.company_id' , '=', 'c.company_id')
+            //->leftJoin('td_product_store as f', 'f.exchange_product_id', '=', 'b.exchange_product_id')
             ->where("a.billing_id",$r->billing_id)
             ->get();
 
