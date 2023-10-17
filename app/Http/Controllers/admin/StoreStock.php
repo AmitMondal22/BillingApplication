@@ -344,6 +344,7 @@ class StoreStock extends Controller
                 "customer_id" => $r->cust_id,
                 "transaction_date" => date('Y-m-d'),
                 "created_by" => auth()->user()->id
+                
             ]);
         } catch (\Exception $e) {
             return response()->json($e, 400);
