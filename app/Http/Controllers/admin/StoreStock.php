@@ -328,7 +328,7 @@ class StoreStock extends Controller
 
 
 
-    public function add_werenty_product(Request $r)
+    public function add_werent_product(Request $r)
     {
         try {
             StorIn::where("serial_number", $r->product_barcode)->update([

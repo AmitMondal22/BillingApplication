@@ -75,6 +75,7 @@ Route::middleware('auth:sanctum', 'ability:A')->group(function () {
     Route::name('billing.')->prefix('billing')->group(function () {
         Route::post('/new', [StoreStock::class, 'billing']);
         Route::post('/data', [Billing::class, 'billing_date']);
+        Route::post('/add_werent_product', [StoreStock::class, 'add_werent_product']);
     });
 
     Route::name('report.')->prefix('report')->group(function () {
@@ -82,18 +83,12 @@ Route::middleware('auth:sanctum', 'ability:A')->group(function () {
     });
 
     Route::name('customer.')->prefix('customer')->group(function () {
-        Route::post('/serch_customer_mobile', [CustomerController
-        ::class, 'mycustomer']);
-        Route::get('/customer_list', [CustomerController
-        ::class, 'all_mycustomer']);
+        Route::post('/serch_customer_mobile', [CustomerController::class, 'mycustomer']);
+        Route::get('/customer_list', [CustomerController::class, 'all_mycustomer']);
 
-        Route::post('/customer_trans', [CustomerController
-        ::class, 'all_mycustomer_alltrans']);
+        Route::post('/customer_trans', [CustomerController::class, 'all_mycustomer_alltrans']);
 
 
-        Route::post('/customer_deposit', [CustomerController
-        ::class, 'customer_deposit']);
+        Route::post('/customer_deposit', [CustomerController::class, 'customer_deposit']);
     });
 });
-
-
