@@ -240,7 +240,7 @@ class StoreStock extends Controller
 
 
             $databar = Sales::latest()->first();
-            $bill_id= $databar ? $databar->billing_id : 0;
+            $bill_id = $databar ? $databar->billing_id : 0;
 
 
             foreach ($r->sl_no as $stordata) {
@@ -256,7 +256,7 @@ class StoreStock extends Controller
                 ]);
                 StorIn::where('product_store_id', $stordata['product_store_id'])->update([
                     "sels_warranty" => $stordata['warranty'],
-                    "sales_flags"=>"Y"
+                    "sales_flags" => "Y"
                 ]);
             }
 
@@ -270,21 +270,21 @@ class StoreStock extends Controller
             ]);
 
 
-if($pymentStatus=='D'){
-    Transaction::create([
-                "billing_id" => $bill_id + 1,
-                "payment_flag" => 'A',
-                "amount" => $r->paid_amt,
-                "customer_id" => $userid,
-                "transaction_date" => date('Y-m-d'),
-                "created_by" => auth()->user()->id
-            ]);
-}
+            if ($pymentStatus == 'D') {
+                Transaction::create([
+                    "billing_id" => $bill_id + 1,
+                    "payment_flag" => 'A',
+                    "amount" => $r->paid_amt,
+                    "customer_id" => $userid,
+                    "transaction_date" => date('Y-m-d'),
+                    "created_by" => auth()->user()->id
+                ]);
+            }
 
 
-            $resData=[
-                'bill_id'=>($bill_id + 1),
-                'status'=>"success"
+            $resData = [
+                'bill_id' => ($bill_id + 1),
+                'status' => "success"
             ];
 
             return response()->json($resData, 200);
@@ -300,20 +300,20 @@ if($pymentStatus=='D'){
 
             $searchKeyword = $r->search;
 
-            $data=DB::table('td_sales as a')
-            ->select('b.name', 'b.mobile_no', 'a.billing_id', DB::raw('SUM(a.price) as total_price'), DB::raw('MAX(a.created_by) as created_by'), DB::raw('MAX(a.billingdate) as billingdate'))
-            ->join('md_customer as b', 'b.id', '=', 'a.cust_id')
+            $data = DB::table('td_sales as a')
+                ->select('b.name', 'b.mobile_no', 'a.billing_id', DB::raw('SUM(a.price) as total_price'), DB::raw('MAX(a.created_by) as created_by'), DB::raw('MAX(a.billingdate) as billingdate'))
+                ->join('md_customer as b', 'b.id', '=', 'a.cust_id')
 
-            ->where(function ($query) use ($searchKeyword) {
-                $query->where('b.name', 'LIKE', '%' . $searchKeyword . '%')
-                    ->orWhere('b.mobile_no', 'LIKE', '%' . $searchKeyword . '%')
-                    ->orWhere('a.billing_id', 'LIKE', '%' . $searchKeyword . '%')
-                    ->orWhere('a.price', 'LIKE', '%' . $searchKeyword . '%')
-                    ->orWhere('a.created_by', 'LIKE', '%' . $searchKeyword . '%');
+                ->where(function ($query) use ($searchKeyword) {
+                    $query->where('b.name', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('b.mobile_no', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('a.billing_id', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('a.price', 'LIKE', '%' . $searchKeyword . '%')
+                        ->orWhere('a.created_by', 'LIKE', '%' . $searchKeyword . '%');
                     // ->orWhere(DB::raw('SUM(a.price)'), 'LIKE', '%' . $searchKeyword . '%');
                     // ->orWhere('total_price', 'LIKE', '%' . $searchKeyword . '%');
-            })
-            ->groupBy('b.name', 'b.mobile_no', 'a.billing_id')->paginate(20);
+                })
+                ->groupBy('b.name', 'b.mobile_no', 'a.billing_id')->paginate(20);
 
 
 
@@ -323,6 +323,30 @@ if($pymentStatus=='D'){
             return response()->json($data, 200);
         } catch (\Throwable $th) {
             return response()->json($th, 400);
+        }
+    }
+
+
+
+    public function add_werenty_product(Request $r)
+    {
+        try {
+            StorIn::where("serial_number", $r->product_barcode)->update([
+                "exchange_product_id" => $r->new_barcode
+            ]);
+            StorIn::where('serial_number', $r->new_barcode)->update([
+                "sales_flags" => "Y"
+            ]);
+            Transaction::create([
+                "billing_id" => $r->bill_id,
+                "payment_flag" => 'P',
+                "amount" => 0.0,
+                "customer_id" => $r->cust_id,
+                "transaction_date" => date('Y-m-d'),
+                "created_by" => auth()->user()->id
+            ]);
+        } catch (\Exception $e) {
+            return response()->json($e, 400);
         }
     }
 }
