@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\Billing;
 use App\Http\Controllers\admin\CustomerController;
 use App\Http\Controllers\admin\MastarController;
+use App\Http\Controllers\admin\Seller;
 use App\Http\Controllers\admin\StoreStock;
 use App\Http\Controllers\user\SellersLabel;
 use App\Http\Controllers\user\User;
@@ -90,5 +91,13 @@ Route::middleware('auth:sanctum', 'ability:A')->group(function () {
 
 
         Route::post('/customer_deposit', [CustomerController::class, 'customer_deposit']);
+    });
+
+
+    Route::name('seller.')->prefix('seller')->group(function () {
+        Route::post('/add', [Seller::class, 'add']);
+       /* Route::get('/edit', [CustomerController::class, 'all_mycustomer']);
+        Route::post('/update', [CustomerController::class, 'all_mycustomer_alltrans']);
+        Route::post('/list', [CustomerController::class, 'customer_deposit']);*/
     });
 });
