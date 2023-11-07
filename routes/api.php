@@ -87,6 +87,11 @@ Route::middleware('auth:sanctum', 'ability:A')->group(function () {
         Route::post('/serch_customer_mobile', [CustomerController::class, 'mycustomer']);
         Route::get('/customer_list', [CustomerController::class, 'all_mycustomer']);
 
+
+
+        Route::post('/customer_add', [CustomerController::class, 'add_mycustomer']);
+        Route::post('/customer_edit', [CustomerController::class, 'edit_mycustomer']);
+
         Route::post('/customer_trans', [CustomerController::class, 'all_mycustomer_alltrans']);
 
 

@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
@@ -95,4 +96,56 @@ class CustomerController extends Controller
             return response()->json($th, 400);
         }
     }
+
+
+    public function add_mycustomer(Request $r){
+        try {
+            $cust=Customer::create([
+                'name'=>$r->name,
+                'adress'=>$r->adress,
+                'mobile_no'=>$r->mobile,
+                'password'=>Hash::make($r->mobile),
+                'role'=>'PU',
+                'otp'=>0,
+                'otp_status'=>'A',
+                "user_type"=>"PU",
+                "deleted_flag"=>"N"
+                ]);
+
+        return response()->json([
+                "data" => $cust,
+                "status" => false
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
+    }
+
+
+
+    public function edit_mycustomer(Request $r){
+        try {
+            $cust=Customer::where("id",$r->id)->update([
+                'name'=>$r->name,
+                'adress'=>$r->adress,
+                'mobile_no'=>$r->mobile,
+                'password'=>Hash::make($r->mobile),
+                'role'=>'PU',
+                'otp'=>0,
+                'otp_status'=>'A',
+                "user_type"=>"PU",
+                "deleted_flag"=>"N"
+                ]);
+
+        return response()->json([
+                "data" => $cust,
+                "status" => false
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json($th, 400);
+        }
+    }
+
 }
