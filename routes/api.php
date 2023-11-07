@@ -96,8 +96,8 @@ Route::middleware('auth:sanctum', 'ability:A')->group(function () {
 
     Route::name('seller.')->prefix('seller')->group(function () {
         Route::post('/add', [Seller::class, 'add']);
-       /* Route::get('/edit', [CustomerController::class, 'all_mycustomer']);
-        Route::post('/update', [CustomerController::class, 'all_mycustomer_alltrans']);
-        Route::post('/list', [CustomerController::class, 'customer_deposit']);*/
+        Route::post('/edit', [Seller::class, 'edit']);
+        Route::get('/list', [Seller::class, 'list']);
+
     });
 });

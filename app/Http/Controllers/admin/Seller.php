@@ -18,4 +18,24 @@ class Seller extends Controller
             "message" => "Seller Added Successfully"
         ], 200);
     }
+
+
+    public function edit(Request $request){
+        SellerMod::where('id',$request->id)->update([
+            "shop_name" => $request->shop_name,
+            "contact" => $request->contact,
+            "adress" => $request->adress,
+        ]);
+        return response()->json([
+            "message" => "Seller update Successfully"
+        ], 200);
+    }
+
+
+    public function list(){
+        $data=SellerMod::get();
+        return response()->json([
+            "data" => $data
+        ], 200);
+    }
 }
