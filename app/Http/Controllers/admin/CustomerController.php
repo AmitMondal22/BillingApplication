@@ -102,8 +102,8 @@ class CustomerController extends Controller
         try {
             $cust=Customer::create([
                 'name'=>$r->name,
-                'adress'=>$r->address,
-                'mobile_no'=>$r->mobile,
+                'adress'=>$r->adress,
+                'mobile_no'=>$r->mobile_no,
                 'password'=>Hash::make($r->mobile),
                 'role'=>'PU',
                 'otp'=>0,
@@ -128,8 +128,8 @@ class CustomerController extends Controller
         try {
             $cust=Customer::where("id",$r->id)->update([
                 'name'=>$r->name,
-                'adress'=>$r->address,
-                'mobile_no'=>$r->mobile,
+                'adress'=>$r->adress,
+                'mobile_no'=>$r->mobile_no,
                 'password'=>Hash::make($r->mobile),
                 'role'=>'PU',
                 'otp'=>0,
