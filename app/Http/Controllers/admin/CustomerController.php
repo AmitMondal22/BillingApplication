@@ -102,7 +102,7 @@ class CustomerController extends Controller
         try {
             $cust=Customer::create([
                 'name'=>$r->name,
-                'adress'=>$r->adress,
+                'adress'=>$r->address,
                 'mobile_no'=>$r->mobile,
                 'password'=>Hash::make($r->mobile),
                 'role'=>'PU',
@@ -114,7 +114,7 @@ class CustomerController extends Controller
 
         return response()->json([
                 "data" => $cust,
-                "status" => false
+                "status" => true
             ], 200);
 
         } catch (\Throwable $th) {
@@ -128,7 +128,7 @@ class CustomerController extends Controller
         try {
             $cust=Customer::where("id",$r->id)->update([
                 'name'=>$r->name,
-                'adress'=>$r->adress,
+                'adress'=>$r->address,
                 'mobile_no'=>$r->mobile,
                 'password'=>Hash::make($r->mobile),
                 'role'=>'PU',
@@ -140,7 +140,7 @@ class CustomerController extends Controller
 
         return response()->json([
                 "data" => $cust,
-                "status" => false
+                "status" => true
             ], 200);
 
         } catch (\Throwable $th) {
