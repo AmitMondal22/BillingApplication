@@ -42,7 +42,7 @@ class CustomerController extends Controller
 
     function all_mycustomer(Request $r){
         try {
-            $custData=Customer::all();
+            $custData=Customer::get();
             if($custData){
                 return response()->json([
                     "data" => $custData,
