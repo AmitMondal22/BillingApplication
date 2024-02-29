@@ -52,7 +52,7 @@ Route::middleware('auth:sanctum', 'ability:A')->group(function () {
         Route::post('/edit_company_name', [MastarController::class, 'edit_company_name']);
         Route::post('/delete_company_name', [MastarController::class, 'delete_company_name']);
 
-
+        
         Route::post('/add_product_name', [MastarController::class, 'add_product_name']);
         Route::get('/product_name', [MastarController::class, 'product_name']);
         Route::post('/edit_product_name', [MastarController::class, 'edit_product_name']);
